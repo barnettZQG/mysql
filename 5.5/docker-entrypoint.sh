@@ -15,9 +15,10 @@ MYSQL_USER=${MYSQL_USER:-"admin"}
 MYSQL_RANDOM_ROOT_PASSWORD="$(pwgen -1 32)"
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-${MYSQL_PASS:-$MYSQL_RANDOM_ROOT_PASSWORD}}
 MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD
-PORT=${PORT,-$PORT}
+PORT=${PORT:-"3306"}
 LOGFILE="$DATADIR/logs/error.log"
 SLOWLOG="$DATADIR/logs/slow.log"
+MYSQL_DATABASE=${MYSQL_DATABASE:-"service"}
 
 case ${MEMORY_SIZE:-large} in
     "large")
@@ -170,11 +171,6 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 		if [ -z "$MYSQL_INITDB_SKIP_TZINFO" ]; then
 			# sed is for https://bugs.mysql.com/bug.php?id=20545
 			mysql_tzinfo_to_sql /usr/share/zoneinfo | sed 's/Local time zone must be set--see zic manual page/FCTY/' | "${mysql[@]}" mysql
-		fi
-
-		if [ ! -z "$MYSQL_RANDOM_ROOT_PASSWORD" ]; then
-			export MYSQL_ROOT_PASSWORD="$(pwgen -1 32)"
-			echo "GENERATED ROOT PASSWORD: $MYSQL_ROOT_PASSWORD"
 		fi
 
 		rootCreate=
