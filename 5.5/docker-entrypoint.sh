@@ -3,8 +3,9 @@ if [[ $1 == "debug" ]] ; then
    exec bash
 fi
 
-if [[ ! -f $DATADIR ]]; then
+if [[ ! -f "$DATADIR/data" ]]; then
      mkdir -p /data/data /data/etc /data/logs
+	 chown -R mysql:mysql /data/data /data/etc /data/logs
 fi
 
 set -eo pipefail
