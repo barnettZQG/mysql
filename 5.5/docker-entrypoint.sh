@@ -1,4 +1,8 @@
 #!/bin/bash
+if [[ $1 == "debug" ]] ; then
+   exec bash
+fi
+
 set -eo pipefail
 shopt -s nullglob
 
