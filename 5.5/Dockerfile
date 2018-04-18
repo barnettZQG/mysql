@@ -61,8 +61,8 @@ ENV PATH $PATH:/usr/local/mysql/bin:/usr/local/mysql/scripts
 
 COPY  etc /etc
 
-RUN mkdir -p /data/data /data/etc/ /var/run/mysqld \
-	&& chown -R mysql:mysql /data/data  /var/run/mysqld \
+RUN mkdir -p /data/data /data/etc /var/run/mysqld \
+	&& chown -R mysql:mysql /data/data /data/etc /etc/mysql  /var/run/mysqld \
 # ensure that /var/run/mysqld (used for socket and lock files) is writable regardless of the UID our mysqld instance ends up having at runtime
 	&& chmod 777 /var/run/mysqld
 
