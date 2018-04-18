@@ -59,23 +59,17 @@ RUN apt-get update && apt-get install -y ca-certificates wget --no-install-recom
 	&& apt-get purge -y --auto-remove binutils
 ENV PATH $PATH:/usr/local/mysql/bin:/usr/local/mysql/scripts
 
-# replicate some of the way the APT package configuration works
-# this is only for 5.5 since it doesn't have an APT repo, and will go away when 5.5 does
-RUN mkdir -p /etc/mysql/conf.d \
-	&& { \
-		echo '[mysqld]'; \
-		echo 'skip-host-cache'; \
-		echo 'skip-name-resolve'; \
-		echo 'datadir = /var/lib/mysql'; \
-		echo '!includedir /etc/mysql/conf.d/'; \
-	} > /etc/mysql/my.cnf
+COPY  etc /etc
 
-RUN mkdir -p /var/lib/mysql /var/run/mysqld \
-	&& chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+RUN mkdir -p /data/data /var/run/mysqld \
+	&& chown -R mysql:mysql /data/data /var/run/mysqld \
 # ensure that /var/run/mysqld (used for socket and lock files) is writable regardless of the UID our mysqld instance ends up having at runtime
 	&& chmod 777 /var/run/mysqld
 
-VOLUME /var/lib/mysql
+VOLUME /data
+
+ENV DATADIR /data
+ENV CONFDIR /etc/mysql
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
