@@ -15,7 +15,7 @@ MYSQL_USER=${MYSQL_USER:-"admin"}
 MYSQL_RANDOM_ROOT_PASSWORD="$(pwgen -1 32)"
 MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-${MYSQL_PASS:-$MYSQL_RANDOM_ROOT_PASSWORD}}
 MYSQL_PASSWORD=$MYSQL_ROOT_PASSWORD
-
+PORT = ${PORT,-$PORT}
 LOGFILE="$DATADIR/logs/error.log"
 SLOWLOG="$DATADIR/logs/slow.log"
 
@@ -61,6 +61,7 @@ fi
 # replace innodb_buffer_pool_size and max_conn
 sed -i -r "s/(innodb_buffer_pool_size)(.*)=.*/\1\2= $INNODB_BUFFER_POOL_SIZE/" $CONFDIR/my.cnf 
 sed -i -r "s/(max_connections)(.*)=.*/\1\2= $MAX_CONN/" $CONFDIR/my.cnf
+sed -i -r "s/(port)(.*)=.*/\1\2= $PORT/" $CONFDIR/my.cnf
 
 # skip setup if they want an option that stops mysqld
 wantHelp=
