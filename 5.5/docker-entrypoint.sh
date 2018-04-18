@@ -3,6 +3,10 @@ if [[ $1 == "debug" ]] ; then
    exec bash
 fi
 
+if [[ ! -f $DATADIR ]]; then
+     mkdir -p /data/data /data/etc /data/logs
+fi
+
 set -eo pipefail
 shopt -s nullglob
 
@@ -111,6 +115,7 @@ _get_config() {
 	local conf="$1"; shift
 	"$@" --verbose --help --log-bin-index="$(mktemp -u)" 2>/dev/null | awk '$1 == "'"$conf"'" { print $2; exit }'
 }
+
 
 # allow the container to be started with `--user`
 if [ "$1" = 'mysqld' -a -z "$wantHelp" -a "$(id -u)" = '0' ]; then
